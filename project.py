@@ -15,6 +15,7 @@ def create_main_menu():
     quit_button = tk.Button(main_window, text="Quit", font=button_font, command=main_window.quit, padx=10, pady=10)
     quit_button.grid(column=1, row=6, padx=10, pady=10)
 
+# var.trace watches variable for changes and triggers function
 
 create_main_menu()
 main_window.mainloop()

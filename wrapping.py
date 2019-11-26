@@ -5,6 +5,11 @@ main = tk.Tk()
 canvas_wh = 300
 selected_fill = "blue"
 
+choice = tk.IntVar()
+
+trangle_radio = tk.Radiobutton(main, text="Triangle", variable=choice, value=1).pack()
+honeycomb_radio = tk.Radiobutton(main, text="Honeycomb", variable=choice, value=2).pack()
+
 canvas = tk.Canvas(main, width=canvas_wh, height=canvas_wh)
 canvas.pack()
 
@@ -38,14 +43,14 @@ def create_hexagon():
                 x_point[5], y_point[5],
                 fill=fill, outline="black"
             )
-            x_point = [(x + offset) for x in x_point]
+            x_point = [x + offset for x in x_point]
         
         if not even_row:
-            x_point = [x - 30 for x in default_x_point]
+            x_point = [x - 45 for x in default_x_point]
         else: 
             x_point = default_x_point
         
-        y_point = [(y + offset) for y in y_point]
+        y_point = [y + offset for y in y_point]
 
 
 def create_triangles():
@@ -77,6 +82,17 @@ def create_triangles():
         else:
             fill = selected_fill
 
+
+def draw(*args):
+    value = choice.get()
+    if value == 1:
+        canvas.delete('all')
+        create_triangles()
+    elif value == 2:
+        canvas.delete('all')
+        create_hexagon()
+
+choice.trace('r', draw)
 
 create_hexagon()
 # create_triangles()
