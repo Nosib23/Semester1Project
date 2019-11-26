@@ -1,51 +1,21 @@
-from tkinter import *
+import tkinter as tk
+from tkinter import messagebox
 
-# constants
-CHEAP = 0.4
-EXPENSIVE = 0.75
-BOW = 1.5
-GIFT_CARD = 0.5
-CHARS = 0.02
+main_window = tk.Tk()
+main_window.title("Checkout System")
 
-mainWindow = Tk()
-mainWindow.title("Order system")
+button_font = "default 16"
 
-title = Label(mainWindow, text="Ordering System", font=("Arial", 20, "bold"))
-title.grid(column=0, row=1, columnspan=2)
+def create_main_menu():
+    title = tk.Label(main_window, text="Checkout", font="default 20 bold")
+    title.grid(column=0, row=0, columnspan=3, padx=10, pady=10)
 
-paperTypeLbl = Label(mainWindow, text="Which paper should be used?")
-paperTypeLbl.grid(column=0, row=2)
+    
 
-paperChoice = IntVar()
-cheapPaper = Radiobutton(mainWindow, text="Cheap paper", variable=paperChoice, value=1)
-expPaper = Radiobutton(mainWindow, text="Expensive paper", variable=paperChoice, value=2)
-cheapPaper.grid(column=1, row=2)
-expPaper.grid(column=1, row=3)
+    quit_button = tk.Button(main_window, text="Quit", font=button_font, command=main_window.quit, padx=10, pady=10)
+    quit_button.grid(column=1, row=6, padx=10, pady=10)
 
-boxButton = Button(mainWindow, text="Box", command=box())
-cylinderButton = Button(mainWindow, text="Cylinder", command=cylinder())
+# var.trace watches variable for changes and triggers function
 
-def box():
-    pass
-
-def cylinder():
-    pass
-
-dimensionsLbl = Label(mainWindow, text="Dimensions:")
-dimensionsLbl.grid(column=0, row=5)
-
-heightLbl = Label(mainWindow, text="Height:")
-heightEntry = Entry(mainWindow)
-widthLbl = Label(mainWindow, text="Width:")
-widthEntry = Entry(mainWindow)
-depthLbl = Label(mainWindow, text="Depth:")
-depthEntry = Entry(mainWindow)
-
-heightLbl.grid(column=0, row=6)
-heightEntry.grid(column=1, row=6)
-widthLbl.grid(column=0, row=7)
-widthEntry.grid(column=1, row=7)
-depthLbl.grid(column=0, row=8)
-depthEntry.grid(column=1, row=8)
-
-mainWindow.mainloop()
+create_main_menu()
+main_window.mainloop()
