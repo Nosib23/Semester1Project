@@ -19,6 +19,9 @@ width = tk.StringVar()
 depth = tk.StringVar()
 diameter = tk.StringVar()
 
+canvas_wh = 300
+global canvas
+canvas = tk.Canvas(main_window, width=canvas_wh, height=canvas_wh)
 
 global frame
 frame = tk.Frame(main_window)
@@ -37,6 +40,8 @@ def create_main_window():
     container_om = tk.OptionMenu(main_window, selection, *CONTAINERS, command=create_form)
     container_om.grid(column=1, row=2, padx=10, sticky=tk.W)
     
+    canvas.grid(column=3, row=2, rowspan=10)
+
     paper_label = tk.Label(main_window, text="Paper type:")
     paper_label.grid(column=0, row=3)
     paper_om = tk.OptionMenu(main_window, paper_type, 'Cheap', 'Expensive', command=create_canvas)
@@ -102,7 +107,15 @@ def create_form(*args):
 
 def create_canvas(*args):
     '''creates canvas for paper preview on user selection of paper type or colour'''
-    pass
+    
+    canvas.delete('all')
+    paper_selection = paper_type.get()
+
+    if paper_selection == 'Cheap':
+        create_triangles()
+    elif paper_selection == 'Expensive':
+        create_hexagon()
+    
 
 def create_hexagon():
     default_x_point = [0, 15, 45, 60, 45, 15]
@@ -139,7 +152,7 @@ def create_hexagon():
 
 
 def create_triangles():
-    fill = selected_fill
+    fill = selected_color.get()
     point1 = (0, canvas_wh)
     point2 = (canvas_wh / 2, 0)
     point3 = (canvas_wh, canvas_wh)
@@ -162,10 +175,11 @@ def create_triangles():
             (point3[0] - 30, point3[1])
         )
 
-        if fill == selected_fill:
+        if fill == selected_color.get():
             fill = "white"
         else:
-            fill = selected_fill
+            fill = selected_color.get()
+
 
 create_main_window()
 main_window.mainloop()
