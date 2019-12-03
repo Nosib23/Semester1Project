@@ -13,6 +13,9 @@ selection = tk.StringVar()
 selected_color = tk.StringVar()
 selected_color.set(COLOURS[0])
 paper_type = tk.StringVar()
+bow = tk.IntVar()
+gift_tag = tk.IntVar()
+gift_tag_text = tk.StringVar()
 
 height = tk.StringVar()
 width = tk.StringVar()
@@ -40,7 +43,9 @@ def create_main_window():
     container_om = tk.OptionMenu(main_window, selection, *CONTAINERS, command=create_form)
     container_om.grid(column=1, row=2, padx=10, sticky=tk.W)
     
-    canvas.grid(column=3, row=2, rowspan=10)
+    canvas_label = tk.Label(main_window, text="Paper preview:")
+    canvas_label.grid(column=3, row=2)
+    canvas.grid(column=3, row=3, rowspan=10, padx=10)
 
     paper_label = tk.Label(main_window, text="Paper type:")
     paper_label.grid(column=0, row=3)
@@ -63,7 +68,7 @@ def create_form(*args):
     
     global frame #use globally defined frame
     try:
-        frame.destroy() # if frame already exists, destroy it
+        frame.destroy() # if frame already exists, destroy it to reset old form
     finally:
         pass
     #reset all variables to default values
@@ -74,35 +79,46 @@ def create_form(*args):
 
     #reinitialise frame
     frame = tk.Frame(main_window)
-    frame.grid(column=0, row=5)
+    frame.grid(column=0, row=5, columnspan=2)
     selected_type = selection.get() # get the selected type for decision
+    
     if selected_type == "Cube":
         height_label = tk.Label(frame, text="Height:")
         height_label.grid(column=0, row=0, padx=10)
         height_entry = tk.Entry(frame, textvariable=height)
-        height_entry.grid(column=0, row=1, padx=10)
+        height_entry.grid(column=1, row=0, padx=10, pady=10)
     elif selected_type == "Cuboid":
         height_label = tk.Label(frame, text="Height:")
         height_label.grid(column=0, row=0, padx=10)
         height_entry = tk.Entry(frame, textvariable=height)
-        height_entry.grid(column=0, row=1, padx=10)
+        height_entry.grid(column=1, row=0, padx=10, pady=10)
         width_label = tk.Label(frame, text="Width:")
-        width_label.grid(column=0, row=2, padx=10)
+        width_label.grid(column=0, row=1, padx=10)
         width_entry = tk.Entry(frame,textvariable=width)
-        width_entry.grid(column=0, row=3, padx=10)
+        width_entry.grid(column=1, row=1, padx=10, pady=10)
         depth_label = tk.Label(frame, text="Depth:")
-        depth_label.grid(column=0, row=4, padx=10)
+        depth_label.grid(column=0, row=2, padx=10)
         depth_entry = tk.Entry(frame, textvariable=depth)
-        depth_entry.grid(column=0, row=5, padx=10)
+        depth_entry.grid(column=1, row=2, padx=10, pady=10)
     elif selected_type == 'Cylinder':
         height_label = tk.Label(frame, text="Height:")
         height_label.grid(column=0, row=0, padx=10)
         height_entry = tk.Entry(frame, textvariable=height)
-        height_entry.grid(column=0, row=1, padx=10)
+        height_entry.grid(column=1, row=0, padx=10, pady=10)
         diameter_label = tk.Label(frame, text="Diameter:")
-        diameter_label.grid(column=0, row=2, padx=10)
+        diameter_label.grid(column=0, row=1, padx=10)
         diameter_entry = tk.Entry(frame, textvariable=diameter)
-        diameter_entry.grid(column=0, row=3, padx=10)
+        diameter_entry.grid(column=1, row=1, padx=10, pady=10)
+
+    bow_label = tk.Label(frame, text="Bow needed:")
+    bow_label.grid(column=0, row=3)
+    bow_check = tk.Checkbutton(frame, variable=bow)
+    bow_check.grid(column=1, row=3)
+    
+    tag_label = tk.Label(frame, text="Gift tag needed:")
+    tag_label.grid(column=0, row=4)
+    tag_check = tk.Checkbutton(frame, variable=gift_tag)
+    tag_check.grid(column=1, row=4)
     
 
 def create_canvas(*args):
@@ -112,9 +128,9 @@ def create_canvas(*args):
     paper_selection = paper_type.get()
 
     if paper_selection == 'Cheap':
-        create_triangles()
-    elif paper_selection == 'Expensive':
         create_hexagon()
+    elif paper_selection == 'Expensive':
+        create_triangles()
     
 
 def create_hexagon():
