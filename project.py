@@ -1,32 +1,43 @@
 import tkinter as tk
 from tkinter import messagebox
+from math import pi
 
 main_window = tk.Tk()
 main_window.title("Checkout System")
 main_window.geometry("1000x600")
 
-button_font = "default 16"
+button_font = "default 12"
 CONTAINERS = ['Cube', 'Cuboid', 'Cylinder']
 COLOURS = ['purple', 'DarkSlateGray4', 'deep sky blue', 'light sea green', 'VioletRed2', 'gold']
+CHEAP = 0.4
+EXPENSIVE = 0.75
+BOW = 1.5
+CARD = 0.5
+CARD_LETTER = 0.02
 
 selection = tk.StringVar()
 selected_color = tk.StringVar()
 selected_color.set(COLOURS[0])
 paper_type = tk.StringVar()
+paper_type.set('Cheap')
 bow = tk.IntVar()
 gift_tag = tk.IntVar()
 gift_tag_text = tk.StringVar()
 
-height = tk.StringVar()
-width = tk.StringVar()
-depth = tk.StringVar()
-diameter = tk.StringVar()
+basket = []
+no_of_items = tk.StringVar()
+no_of_items.set('0')
+total_cost_str = tk.StringVar()
+total_cost_str.set('£0.00')
+
+height_sv = tk.StringVar()
+width_sv = tk.StringVar()
+length_sv = tk.StringVar()
+diameter_sv = tk.StringVar()
 
 canvas_wh = 300
-global canvas
 canvas = tk.Canvas(main_window, width=canvas_wh, height=canvas_wh)
 
-global frame
 frame = tk.Frame(main_window)
 
 
@@ -34,18 +45,15 @@ def create_main_window():
     title = tk.Label(main_window, text="Wrapping ordering system", font="default 16 bold")
     title.grid(column=0, row=0, columnspan=3, padx=10, pady=10)
 
+    #column 1 & 2
     selection.set(CONTAINERS[0])
     selection_label = tk.Label(main_window, text="Please select which container the wrapping is for:", padx=10)
-    selection_label.grid(column=0, row=1, columnspan=3, sticky=tk.W)
+    selection_label.grid(column=0, row=1, columnspan=3)
 
     container_label = tk.Label(main_window, text="Container type:", padx=10)
     container_label.grid(column=0, row=2)
     container_om = tk.OptionMenu(main_window, selection, *CONTAINERS, command=create_form)
-    container_om.grid(column=1, row=2, padx=10, sticky=tk.W)
-    
-    canvas_label = tk.Label(main_window, text="Paper preview:")
-    canvas_label.grid(column=3, row=2)
-    canvas.grid(column=3, row=3, rowspan=10, padx=10)
+    container_om.grid(column=1, row=2, padx=10)
 
     paper_label = tk.Label(main_window, text="Paper type:")
     paper_label.grid(column=0, row=3)
@@ -55,12 +63,70 @@ def create_main_window():
     colour_label = tk.Label(main_window, text="Colour choice:")
     colour_label.grid(column=0, row=4)
     colour_om = tk.OptionMenu(main_window, selected_color, *COLOURS, command=create_canvas)
-    colour_om.grid(column=1, row=4, padx=10, sticky=tk.W)
+    colour_om.grid(column=1, row=4, padx=10)
 
     create_form()
+    
+    #column 3
+    canvas_label = tk.Label(main_window, text="Paper preview:")
+    canvas_label.grid(column=3, row=1)
+    canvas.grid(column=3, row=2, rowspan=10, padx=10)
+    
+    create_canvas()
+
+    #column 4
+    add_button = tk.Button(main_window, text="Add to Basket", command=add_to_basket, font=button_font, padx=5, pady=5)
+    add_button.grid(column=4, row=2, padx=20)
+
+    #column 5 & 6
+    basket_label = tk.Label(main_window, text="Basket:")
+    basket_label.grid(column=5, row=1, sticky=tk.W)
+
+    no_label = tk.Label(main_window, text="Number of items:")
+    no_label.grid(column=5, row=2, sticky=tk.W)
+    items_label = tk.Label(main_window, textvariable=no_of_items)
+    items_label.grid(column=6, row=2, sticky=tk.W)
+    total_cost = tk.Label(main_window, text="Total cost:")
+    total_cost.grid(column=5, row=3, sticky=tk.W)
+    total_cost_label = tk.Label(main_window, textvariable=total_cost_str)
+    total_cost_label.grid(column=6, row=3, sticky=tk.W)
 
     quit_button = tk.Button(main_window, text="Quit", font=button_font, command=main_window.quit, padx=5, pady=5)
     quit_button.grid(column=1, row=20, padx=10, pady=10)
+
+
+def add_to_basket():
+    noi = int(no_of_items.get())
+    height = int(height_sv.get())   
+    height_sv.set('0')
+    width = int(width_sv.get())
+    width_sv.set('0')
+    length = int(length_sv.get())
+    length_sv.set('0')
+    diameter = int(diameter_sv.get())
+    diameter_sv.set('0')
+
+    selected = selection.get()
+    if selected == CONTAINERS[0]: # cube
+        wrapper_size = (height * 4 + 6) * (height * 3 + 6)
+    elif selected == CONTAINERS[1]: # cuboid
+        wrapper_size = ((height * 2) + width + 6) * ((length*2) + (height*2) + 6)
+    elif selected == CONTAINERS[2]: # cylinder
+        circumference = pi * diameter
+        wrapper_size = (circumference + 6) * (height + (diameter*2) + 6)
+    
+    pt = paper_type.get()
+    if pt == 'Cheap':
+        price = wrapper_size * CHEAP
+    elif pt == 'Expensive':
+        price = wrapper_size * EXPENSIVE
+
+    noi += 1
+    no_of_items.set(f'{noi}')
+    basket.append({})
+    basket[noi-1].setdefault(f'Item {noi}', [price])
+    print(basket)
+    pass
 
 
 def create_form(*args):
@@ -72,10 +138,10 @@ def create_form(*args):
     finally:
         pass
     #reset all variables to default values
-    height.set('0')
-    width.set('0')
-    depth.set('0')
-    diameter.set('0')
+    height_sv.set('0')
+    width_sv.set('0')
+    length_sv.set('0')
+    diameter_sv.set('0')
 
     #reinitialise frame
     frame = tk.Frame(main_window)
@@ -85,29 +151,29 @@ def create_form(*args):
     if selected_type == "Cube":
         height_label = tk.Label(frame, text="Height:")
         height_label.grid(column=0, row=0, padx=10)
-        height_entry = tk.Entry(frame, textvariable=height)
+        height_entry = tk.Entry(frame, textvariable=height_sv)
         height_entry.grid(column=1, row=0, padx=10, pady=10)
     elif selected_type == "Cuboid":
         height_label = tk.Label(frame, text="Height:")
         height_label.grid(column=0, row=0, padx=10)
-        height_entry = tk.Entry(frame, textvariable=height)
+        height_entry = tk.Entry(frame, textvariable=height_sv)
         height_entry.grid(column=1, row=0, padx=10, pady=10)
         width_label = tk.Label(frame, text="Width:")
         width_label.grid(column=0, row=1, padx=10)
-        width_entry = tk.Entry(frame,textvariable=width)
+        width_entry = tk.Entry(frame,textvariable=width_sv)
         width_entry.grid(column=1, row=1, padx=10, pady=10)
-        depth_label = tk.Label(frame, text="Depth:")
-        depth_label.grid(column=0, row=2, padx=10)
-        depth_entry = tk.Entry(frame, textvariable=depth)
-        depth_entry.grid(column=1, row=2, padx=10, pady=10)
+        length_label = tk.Label(frame, text="Length:")
+        length_label.grid(column=0, row=2, padx=10)
+        length_entry = tk.Entry(frame, textvariable=length_sv)
+        length_entry.grid(column=1, row=2, padx=10, pady=10)
     elif selected_type == 'Cylinder':
         height_label = tk.Label(frame, text="Height:")
         height_label.grid(column=0, row=0, padx=10)
-        height_entry = tk.Entry(frame, textvariable=height)
+        height_entry = tk.Entry(frame, textvariable=height_sv)
         height_entry.grid(column=1, row=0, padx=10, pady=10)
         diameter_label = tk.Label(frame, text="Diameter:")
         diameter_label.grid(column=0, row=1, padx=10)
-        diameter_entry = tk.Entry(frame, textvariable=diameter)
+        diameter_entry = tk.Entry(frame, textvariable=diameter_sv)
         diameter_entry.grid(column=1, row=1, padx=10, pady=10)
 
     bow_label = tk.Label(frame, text="Bow needed:")
@@ -128,12 +194,14 @@ def create_canvas(*args):
     paper_selection = paper_type.get()
 
     if paper_selection == 'Cheap':
-        create_hexagon()
+        draw_hexagon()
     elif paper_selection == 'Expensive':
-        create_triangles()
+        draw_triangles()
     
 
-def create_hexagon():
+def draw_hexagon():
+    '''draws hexagon "cheap" wrapping paper in the canvas'''
+
     default_x_point = [0, 15, 45, 60, 45, 15]
     x_point = default_x_point
     y_point = [30, 0, 0, 30, 60, 60]
@@ -167,7 +235,10 @@ def create_hexagon():
         y_point = [y + offset for y in y_point]
 
 
-def create_triangles():
+def draw_triangles():
+    ''' draws triangle paper in the canvas '''
+    
+    
     fill = selected_color.get()
     point1 = (0, canvas_wh)
     point2 = (canvas_wh / 2, 0)
