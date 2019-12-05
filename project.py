@@ -147,7 +147,7 @@ def add_to_basket():
 
     noi += 1
     no_of_items.set(f'{noi}')
-    basket.setdefault(f'Item {noi}', [f'Price: {price:.2f} pounds', f'Type: {selected}', f'Bow: {bow_added}', f'Gift Card: {tag_added}', f'Card text: {tag_text}'])
+    basket.setdefault(f'Item {noi}', [f'Price: £ {price:.2f} pounds', f'Type: {selected}', f'Bow: {bow_added}', f'Gift Card: {tag_added}', f'Card text: {tag_text}'])
 
 
 def create_canvas(*args):
@@ -300,7 +300,7 @@ def print_quote():
             f.write(k +  '\n')
             for value in v:
                 f.write(value + '\n')
-        f.write(f'Total cost: {total_cost:.2f} pounds.' + '\n')
+        f.write(f'Total cost: £ {total_cost:.2f} pounds.' + '\n')
         messagebox.showinfo('Saved to file', 'Quote was saved to file "quote.txt" in main directory.')
 
 
@@ -310,10 +310,10 @@ def view_basket():
     add_window.title("Basket")
 
     title = tk.Label(add_window, text="Basket", font="default 16 bold")
-    title.grid(column=0, row=0)
+    title.grid(column=0, row=0, padx=10)
     
     content = tk.Label(add_window, textvariable=basket_contents)
-    content.grid(column=0, row=1)
+    content.grid(column=0, row=1, padx=50)
 
     for k, v in basket.items():
         contents = basket_contents.get()
