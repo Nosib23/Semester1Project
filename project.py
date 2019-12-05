@@ -29,6 +29,7 @@ no_of_items = tk.StringVar()
 no_of_items.set('0')
 total_cost_str = tk.StringVar()
 total_cost_str.set('£0.00')
+total_cost = 0.0
 
 height_sv = tk.StringVar()
 width_sv = tk.StringVar()
@@ -86,13 +87,13 @@ def create_main_window():
     no_label.grid(column=5, row=2, sticky=tk.W)
     items_label = tk.Label(main_window, textvariable=no_of_items)
     items_label.grid(column=6, row=2, sticky=tk.W)
-    total_cost = tk.Label(main_window, text="Total cost:")
-    total_cost.grid(column=5, row=3, sticky=tk.W)
+    total_cost_lbl = tk.Label(main_window, text="Total cost:")
+    total_cost_lbl.grid(column=5, row=3, sticky=tk.W)
     total_cost_label = tk.Label(main_window, textvariable=total_cost_str)
     total_cost_label.grid(column=6, row=3, sticky=tk.W)
 
     quit_button = tk.Button(main_window, text="Quit", font=button_font, command=main_window.quit, padx=5, pady=5)
-    quit_button.grid(column=1, row=20, padx=10, pady=10)
+    quit_button.grid(column=6, row=20, padx=10, pady=10)
 
 
 def add_to_basket():
@@ -105,6 +106,9 @@ def add_to_basket():
     length_sv.set('0')
     diameter = int(diameter_sv.get())
     diameter_sv.set('0')
+    bow_added = 'no'
+    tag_added = 'no'
+    tag_text = ''
 
     selected = selection.get()
     if selected == CONTAINERS[0]: # cube
@@ -121,12 +125,22 @@ def add_to_basket():
     elif pt == 'Expensive':
         price = wrapper_size * EXPENSIVE
 
+    price = price / 100
+
+    if bow.get():
+        price += 1.5
+        bow_added = 'yes'
+
+
+    global total_cost
+    total_cost += price
+    total_cost_str.set(f'£{total_cost:.2f}')
+
     noi += 1
     no_of_items.set(f'{noi}')
     basket.append({})
-    basket[noi-1].setdefault(f'Item {noi}', [price])
+    basket[noi-1].setdefault(f'Item {noi}', [f'Price: {price}', f'Type: {selected}', f'Bow: {bow_added}'])
     print(basket)
-    pass
 
 
 def create_form(*args):
