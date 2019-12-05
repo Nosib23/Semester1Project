@@ -131,13 +131,15 @@ def add_to_basket():
     if bow.get():
         price += BOW
         bow_added = 'yes'
+        bow.set(0)
 
     if gift_tag.get():
         tag_text = gift_tag_text.get()
         price += CARD
         price += len(tag_text) * CARD_LETTER
         tag_added = 'yes'
-    gift_tag_text.set('')
+        gift_tag.set(0)
+        gift_tag_text.set('')
 
     global total_cost
     total_cost += price
@@ -145,8 +147,7 @@ def add_to_basket():
 
     noi += 1
     no_of_items.set(f'{noi}')
-    basket.setdefault(f'Item {noi}', [f'Price: {price}', f'Type: {selected}', f'Bow: {bow_added}'])
-    print(basket)
+    basket.setdefault(f'Item {noi}', [f'Price: {price:.2f} pounds', f'Type: {selected}', f'Bow: {bow_added}', f'Gift Card: {tag_added}', f'Card text: {tag_text}'])
 
 
 def create_form(*args):
@@ -293,7 +294,14 @@ def draw_triangles():
 
 
 def print_quote():
-    messagebox.showinfo('Sorry', 'Not yet implemented')
+    with open("quote.txt", "w+") as f:
+        f.write('Quote: \n \n')
+        for k, v in basket.items():
+            f.write(k +  '\n')
+            for value in v:
+                f.write(value + '\n')
+        f.write(f'Total cost: {total_cost:.2f} pounds.' + '\n')
+        messagebox.showinfo('Saved to file', 'Quote was saved to file "quote.txt" in main directory.')
 
 
 def view_basket():
@@ -310,12 +318,11 @@ def view_basket():
     for k, v in basket.items():
         contents = basket_contents.get()
         print(contents)
-        contents = contents + '\n' f'''{k}:
+        contents = contents + '\n' + f'''{k}:
 {v[0]}
 {v[1]}
 {v[2]}
 ---'''
-
         basket_contents.set(contents)
 
 
