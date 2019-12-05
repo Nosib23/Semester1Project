@@ -150,6 +150,18 @@ def add_to_basket():
     basket.setdefault(f'Item {noi}', [f'Price: {price:.2f} pounds', f'Type: {selected}', f'Bow: {bow_added}', f'Gift Card: {tag_added}', f'Card text: {tag_text}'])
 
 
+def create_canvas(*args):
+    '''creates canvas for paper preview on user selection of paper type or colour'''
+    
+    canvas.delete('all')
+    paper_selection = paper_type.get()
+
+    if paper_selection == 'Cheap':
+        draw_hexagon()
+    elif paper_selection == 'Expensive':
+        draw_triangles()
+    
+
 def create_form(*args):
     '''initialises and switches form on user selection of container type'''
     
@@ -211,18 +223,6 @@ def create_form(*args):
     tag_entry = tk.Entry(frame, textvariable=gift_tag_text)
     tag_entry.grid(column=1, row=5)
 
-
-def create_canvas(*args):
-    '''creates canvas for paper preview on user selection of paper type or colour'''
-    
-    canvas.delete('all')
-    paper_selection = paper_type.get()
-
-    if paper_selection == 'Cheap':
-        draw_hexagon()
-    elif paper_selection == 'Expensive':
-        draw_triangles()
-    
 
 def draw_hexagon():
     '''draws hexagon "cheap" wrapping paper in the canvas'''
