@@ -310,14 +310,13 @@ def view_basket():
     add_window.title("Basket")
 
     title = tk.Label(add_window, text="Basket", font="default 16 bold")
-    title.grid(column=1, row=0, columnspan=2,)
+    title.grid(column=0, row=0)
     
     content = tk.Label(add_window, textvariable=basket_contents)
-    content.grid(column=0, row=1, columnspan=3, sticky=tk.W)
+    content.grid(column=0, row=1)
 
     for k, v in basket.items():
         contents = basket_contents.get()
-        print(contents)
         contents = contents + '\n' + f'''{k}:
 {v[0]}
 {v[1]}
