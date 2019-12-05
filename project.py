@@ -4,9 +4,7 @@ from math import pi
 
 main_window = tk.Tk()
 main_window.title("Checkout System")
-main_window.geometry("1000x600")
 
-button_font = "default 12"
 CONTAINERS = ['Cube', 'Cuboid', 'Cylinder']
 COLOURS = ['purple', 'DarkSlateGray4', 'deep sky blue', 'light sea green', 'VioletRed2', 'gold']
 CHEAP = 0.4
@@ -15,6 +13,7 @@ BOW = 1.5
 CARD = 0.5
 CARD_LETTER = 0.02
 
+button_font = "default 12"
 selection = tk.StringVar()
 selected_color = tk.StringVar()
 selected_color.set(COLOURS[0])
@@ -23,8 +22,7 @@ paper_type.set('Cheap')
 bow = tk.IntVar()
 gift_tag = tk.IntVar()
 gift_tag_text = tk.StringVar()
-
-basket = []
+basket = {}
 no_of_items = tk.StringVar()
 no_of_items.set('0')
 total_cost_str = tk.StringVar()
@@ -38,7 +36,6 @@ diameter_sv = tk.StringVar()
 
 canvas_wh = 300
 canvas = tk.Canvas(main_window, width=canvas_wh, height=canvas_wh)
-
 frame = tk.Frame(main_window)
 
 
@@ -77,7 +74,11 @@ def create_main_window():
 
     #column 4
     add_button = tk.Button(main_window, text="Add to Basket", command=add_to_basket, font=button_font, padx=5, pady=5)
-    add_button.grid(column=4, row=2, padx=20)
+    add_button.grid(column=4, row=2, padx=20, pady=5)
+    view_basket_button = tk.Button(main_window, text="View Basket", command=view_basket, font=button_font, padx=5, pady=5)
+    view_basket_button.grid(column=4, row=3, padx=20, pady=5)
+    print_button = tk.Button(main_window, text="Print Quote", command=print_quote, font=button_font, padx=5, pady=5)
+    print_button.grid(column=4, row=4, padx=20, pady=5)
 
     #column 5 & 6
     basket_label = tk.Label(main_window, text="Basket:")
@@ -128,9 +129,15 @@ def add_to_basket():
     price = price / 100
 
     if bow.get():
-        price += 1.5
+        price += BOW
         bow_added = 'yes'
 
+    if gift_tag.get():
+        tag_text = gift_tag_text.get()
+        price += CARD
+        price += len(tag_text) * CARD_LETTER
+        tag_added = 'yes'
+    gift_tag_text.set('')
 
     global total_cost
     total_cost += price
@@ -138,8 +145,7 @@ def add_to_basket():
 
     noi += 1
     no_of_items.set(f'{noi}')
-    basket.append({})
-    basket[noi-1].setdefault(f'Item {noi}', [f'Price: {price}', f'Type: {selected}', f'Bow: {bow_added}'])
+    basket.setdefault(f'Item {noi}', [f'Price: {price}', f'Type: {selected}', f'Bow: {bow_added}'])
     print(basket)
 
 
@@ -199,7 +205,11 @@ def create_form(*args):
     tag_label.grid(column=0, row=4)
     tag_check = tk.Checkbutton(frame, variable=gift_tag)
     tag_check.grid(column=1, row=4)
-    
+    tag_needed_label = tk.Label(frame, text="Gift tag text")
+    tag_needed_label.grid(column=0, row=5)
+    tag_entry = tk.Entry(frame, textvariable=gift_tag_text)
+    tag_entry.grid(column=1, row=5)
+
 
 def create_canvas(*args):
     '''creates canvas for paper preview on user selection of paper type or colour'''
@@ -280,6 +290,33 @@ def draw_triangles():
             fill = "white"
         else:
             fill = selected_color.get()
+
+
+def print_quote():
+    messagebox.showinfo('Sorry', 'Not yet implemented')
+
+
+def view_basket():
+    basket_contents = tk.StringVar()
+    add_window = tk.Toplevel(main_window)
+    add_window.title("Basket")
+
+    title = tk.Label(add_window, text="Basket", font="default 16 bold")
+    title.grid(column=1, row=0, columnspan=2,)
+    
+    content = tk.Label(add_window, textvariable=basket_contents)
+    content.grid(column=0, row=1, columnspan=3, sticky=tk.W)
+
+    for k, v in basket.items():
+        contents = basket_contents.get()
+        print(contents)
+        contents = contents + '\n' f'''{k}:
+{v[0]}
+{v[1]}
+{v[2]}
+---'''
+
+        basket_contents.set(contents)
 
 
 create_main_window()
