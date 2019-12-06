@@ -161,10 +161,10 @@ def add_to_basket():
     noi += 1
     no_of_items.set(f'{noi}')
     basket.setdefault(f'Item {noi}', [
-        f'Price: £ {price:.2f} pounds',
+        f'Price: £ {price:.2f}',
         f'Container Type: {selected}',
-        f'Paper type: {pt}'
-        f'Colour: {colour}'
+        f'Paper type: {pt}',
+        f'Colour: {colour}',
         f'Bow: {bow_added}',
         f'Gift Card: {tag_added}',
         f'Card text: {tag_text}'
@@ -322,6 +322,10 @@ def print_quote():
             for value in v:
                 f.write(value + '\n')
         f.write(f'Total cost: £ {total_cost:.2f} pounds.' + '\n')
+        vat = total_cost * 0.2
+        f.write(f'VAT: {vat}' + '\n')
+        cost_w_vat = total_cost + vat
+        f.write(f'Total cost (with VAT): {cost_w_vat}')
         messagebox.showinfo('Saved to file', 'Quote was saved to file "quote.txt" in main directory.')
 
 
@@ -340,7 +344,8 @@ def view_basket():
         contents = basket_contents.get()
         contents = contents + '---\n' + k
         for value in v:
-            contents = contents + '\n' + value
+            contents = contents + '\n'
+            contents = contents + value
         basket_contents.set(contents)
 
 
