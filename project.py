@@ -6,7 +6,14 @@ main_window = tk.Tk()
 main_window.title("Checkout System")
 
 CONTAINERS = ['Cube', 'Cuboid', 'Cylinder']
-COLOURS = ['purple', 'DarkSlateGray4', 'deep sky blue', 'light sea green', 'VioletRed2', 'gold']
+COLOURS = [
+    'purple',
+    'DarkSlateGray4',
+    'deep sky blue',
+    'light sea green',
+    'VioletRed2',
+    'gold'
+    ]
 CHEAP = 0.4
 EXPENSIVE = 0.75
 BOW = 1.5
@@ -36,15 +43,15 @@ frame = tk.Frame(main_window)
 
 
 def create_main_window():
-    selected_color.set(COLOURS[0]) #initialise variables
+    selected_color.set(COLOURS[0])  # initialise variables
     paper_type.set('Cheap')
     total_cost_str.set('£0.00')
     no_of_items.set('0')
-    
+
     title = tk.Label(main_window, text="Wrapping ordering system", font="default 16 bold")
     title.grid(column=0, row=0, columnspan=3, padx=10, pady=10)
 
-    #column 1 & 2
+    # column 1 & 2
     selection.set(CONTAINERS[0])
     selection_label = tk.Label(main_window, text="Please select which container the wrapping is for:", padx=10)
     selection_label.grid(column=0, row=1, columnspan=3)
@@ -65,15 +72,15 @@ def create_main_window():
     colour_om.grid(column=1, row=4, padx=10)
 
     create_form()
-    
-    #column 3
+
+    # column 3
     canvas_label = tk.Label(main_window, text="Paper preview:")
     canvas_label.grid(column=3, row=1)
     canvas.grid(column=3, row=2, rowspan=10, padx=10)
-    
+
     create_canvas()
 
-    #column 4
+    # column 4
     add_button = tk.Button(main_window, text="Add to Basket", command=add_to_basket, font=button_font, padx=5, pady=5)
     add_button.grid(column=4, row=2, padx=20, pady=5)
     view_basket_button = tk.Button(main_window, text="View Basket", command=view_basket, font=button_font, padx=5, pady=5)
@@ -81,7 +88,7 @@ def create_main_window():
     print_button = tk.Button(main_window, text="Print Quote", command=print_quote, font=button_font, padx=5, pady=5)
     print_button.grid(column=4, row=4, padx=20, pady=5)
 
-    #column 5 & 6
+    # column 5 & 6
     basket_label = tk.Label(main_window, text="Basket:")
     basket_label.grid(column=5, row=1, sticky=tk.W)
 
@@ -99,13 +106,13 @@ def create_main_window():
 
 
 def add_to_basket():
-    noi = int(no_of_items.get()) # get variables from stringvars into ints
+    noi = int(no_of_items.get())  # get variables from stringvars into ints
     try:
-        height = float(height_sv.get())   
+        height = float(height_sv.get())
         width = float(width_sv.get())
         length = float(length_sv.get())
         diameter = float(diameter_sv.get())
-    except:
+    except ValueError:
         messagebox.showerror('Error', 'Inputs must be numbers')
         return
     colour = selected_color.get()
@@ -118,14 +125,14 @@ def add_to_basket():
     tag_text = ''
 
     selected = selection.get()
-    if selected == CONTAINERS[0]: # cube
+    if selected == CONTAINERS[0]:  # cube
         wrapper_size = (height * 4 + 6) * (height * 3 + 6)
-    elif selected == CONTAINERS[1]: # cuboid
+    elif selected == CONTAINERS[1]:  # cuboid
         wrapper_size = ((height * 2) + width + 6) * ((length*2) + (height*2) + 6)
-    elif selected == CONTAINERS[2]: # cylinder
+    elif selected == CONTAINERS[2]:  # cylinder
         circumference = pi * diameter
         wrapper_size = (circumference + 6) * (height + (diameter*2) + 6)
-    
+
     pt = paper_type.get()
     if pt == 'Cheap':
         price = wrapper_size * CHEAP
@@ -154,19 +161,20 @@ def add_to_basket():
     noi += 1
     no_of_items.set(f'{noi}')
     basket.setdefault(f'Item {noi}', [
-        f'Price: £ {price:.2f} pounds', 
+        f'Price: £ {price:.2f} pounds',
         f'Container Type: {selected}',
-        f'Paper type: {pt}' 
+        f'Paper type: {pt}'
         f'Colour: {colour}'
-        f'Bow: {bow_added}', 
-        f'Gift Card: {tag_added}', 
+        f'Bow: {bow_added}',
+        f'Gift Card: {tag_added}',
         f'Card text: {tag_text}'
         ])
 
 
 def create_canvas(*args):
-    '''creates canvas for paper preview on user selection of paper type or colour'''
-    
+    '''creates canvas for paper preview on
+    user selection of paper type or colour'''
+
     canvas.delete('all')
     paper_selection = paper_type.get()
 
@@ -174,27 +182,27 @@ def create_canvas(*args):
         draw_hexagon()
     elif paper_selection == 'Expensive':
         draw_triangles()
-    
+
 
 def create_form(*args):
     '''initialises and switches form on user selection of container type'''
-    
-    global frame #use globally defined frame
+
+    global frame  # use globally defined frame
     try:
-        frame.destroy() # if frame already exists, destroy it to reset old form
+        frame.destroy()  # if frame already exists, destroy it to reset old form
     finally:
         pass
-    #reset all variables to default values
+    # reset all variables to default values
     height_sv.set('0')
     width_sv.set('0')
     length_sv.set('0')
     diameter_sv.set('0')
 
-    #reinitialise frame
+    # reinitialise frame
     frame = tk.Frame(main_window)
     frame.grid(column=0, row=5, columnspan=2)
-    selected_type = selection.get() # get the selected type for decision
-    
+    selected_type = selection.get()  # get the selected type for decision
+
     if selected_type == "Cube":
         height_label = tk.Label(frame, text="Height:")
         height_label.grid(column=0, row=0, padx=10)
@@ -207,7 +215,7 @@ def create_form(*args):
         height_entry.grid(column=1, row=0, padx=10, pady=10)
         width_label = tk.Label(frame, text="Width:")
         width_label.grid(column=0, row=1, padx=10)
-        width_entry = tk.Entry(frame,textvariable=width_sv)
+        width_entry = tk.Entry(frame, textvariable=width_sv)
         width_entry.grid(column=1, row=1, padx=10, pady=10)
         length_label = tk.Label(frame, text="Length:")
         length_label.grid(column=0, row=2, padx=10)
@@ -227,7 +235,7 @@ def create_form(*args):
     bow_label.grid(column=0, row=3)
     bow_check = tk.Checkbutton(frame, variable=bow)
     bow_check.grid(column=1, row=3)
-    
+
     tag_label = tk.Label(frame, text="Gift tag needed:")
     tag_label.grid(column=0, row=4)
     tag_check = tk.Checkbutton(frame, variable=gift_tag)
@@ -253,7 +261,7 @@ def draw_hexagon():
         else:
             even_row = True
             columns = 6
-        
+
         for x in range(columns):
             canvas.create_polygon(
                 x_point[0], y_point[0],
@@ -265,19 +273,18 @@ def draw_hexagon():
                 fill=fill, outline="black"
             )
             x_point = [x + offset for x in x_point]
-        
+
         if not even_row:
             x_point = [x - 45 for x in default_x_point]
-        else: 
+        else:
             x_point = default_x_point
-        
+
         y_point = [y + offset for y in y_point]
 
 
 def draw_triangles():
     ''' draws triangle paper in the canvas '''
-    
-    
+
     fill = selected_color.get()
     point1 = (0, canvas_wh)
     point2 = (canvas_wh / 2, 0)
@@ -311,7 +318,7 @@ def print_quote():
     with open("quote.txt", "w+") as f:
         f.write('Quote: \n \n')
         for k, v in basket.items():
-            f.write(k +  '\n')
+            f.write(k + '\n')
             for value in v:
                 f.write(value + '\n')
         f.write(f'Total cost: £ {total_cost:.2f} pounds.' + '\n')
@@ -325,7 +332,7 @@ def view_basket():
 
     title = tk.Label(add_window, text="Basket", font="default 16 bold")
     title.grid(column=0, row=0, padx=10)
-    
+
     content = tk.Label(add_window, textvariable=basket_contents)
     content.grid(column=0, row=1, padx=50)
 
