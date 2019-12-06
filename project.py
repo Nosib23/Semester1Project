@@ -16,17 +16,13 @@ CARD_LETTER = 0.02
 button_font = "default 12"
 selection = tk.StringVar()
 selected_color = tk.StringVar()
-selected_color.set(COLOURS[0])
 paper_type = tk.StringVar()
-paper_type.set('Cheap')
 bow = tk.IntVar()
 gift_tag = tk.IntVar()
 gift_tag_text = tk.StringVar()
 basket = {}
 no_of_items = tk.StringVar()
-no_of_items.set('0')
 total_cost_str = tk.StringVar()
-total_cost_str.set('£0.00')
 total_cost = 0.0
 
 height_sv = tk.StringVar()
@@ -40,6 +36,11 @@ frame = tk.Frame(main_window)
 
 
 def create_main_window():
+    selected_color.set(COLOURS[0]) #initialise variables
+    paper_type.set('Cheap')
+    total_cost_str.set('£0.00')
+    no_of_items.set('0')
+    
     title = tk.Label(main_window, text="Wrapping ordering system", font="default 16 bold")
     title.grid(column=0, row=0, columnspan=3, padx=10, pady=10)
 
@@ -98,14 +99,19 @@ def create_main_window():
 
 
 def add_to_basket():
-    noi = int(no_of_items.get())
-    height = int(height_sv.get())   
-    height_sv.set('0')
-    width = int(width_sv.get())
+    noi = int(no_of_items.get()) # get variables from stringvars into ints
+    try:
+        height = float(height_sv.get())   
+        width = float(width_sv.get())
+        length = float(length_sv.get())
+        diameter = float(diameter_sv.get())
+    except:
+        messagebox.showerror('Error', 'Inputs must be numbers')
+        return
+    colour = selected_color.get()
+    height_sv.set('0')  # reset variables
     width_sv.set('0')
-    length = int(length_sv.get())
     length_sv.set('0')
-    diameter = int(diameter_sv.get())
     diameter_sv.set('0')
     bow_added = 'no'
     tag_added = 'no'
@@ -147,7 +153,15 @@ def add_to_basket():
 
     noi += 1
     no_of_items.set(f'{noi}')
-    basket.setdefault(f'Item {noi}', [f'Price: £ {price:.2f} pounds', f'Type: {selected}', f'Bow: {bow_added}', f'Gift Card: {tag_added}', f'Card text: {tag_text}'])
+    basket.setdefault(f'Item {noi}', [
+        f'Price: £ {price:.2f} pounds', 
+        f'Container Type: {selected}',
+        f'Paper type: {pt}' 
+        f'Colour: {colour}'
+        f'Bow: {bow_added}', 
+        f'Gift Card: {tag_added}', 
+        f'Card text: {tag_text}'
+        ])
 
 
 def create_canvas(*args):
@@ -317,11 +331,9 @@ def view_basket():
 
     for k, v in basket.items():
         contents = basket_contents.get()
-        contents = contents + '\n' + f'''{k}:
-{v[0]}
-{v[1]}
-{v[2]}
----'''
+        contents = contents + '---\n' + k
+        for value in v:
+            contents = contents + '\n' + value
         basket_contents.set(contents)
 
 
