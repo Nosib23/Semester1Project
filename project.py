@@ -43,6 +43,8 @@ frame = tk.Frame(main_window)
 
 
 def create_main_window():
+    '''initialises the main window of the system'''
+    
     selected_color.set(COLOURS[0])  # initialise variables
     paper_type.set('Cheap')
     total_cost_str.set('£0.00')
@@ -106,15 +108,18 @@ def create_main_window():
 
 
 def add_to_basket():
+    '''gets container from form variables, calculates area and price,
+    adds add-on elements to price and then adds item to basket dict''' 
+    
     noi = int(no_of_items.get())  # get variables from stringvars into ints
     try:
         height = float(height_sv.get())
         width = float(width_sv.get())
         length = float(length_sv.get())
         diameter = float(diameter_sv.get())
-    except ValueError:
-        messagebox.showerror('Error', 'Inputs must be numbers')
-        return
+    except ValueError:  # if value other than number input
+        messagebox.showerror('Error', 'Inputs must be numbers')  # show user error box
+        return  # and return to prevent further running
     colour = selected_color.get()
     height_sv.set('0')  # reset variables
     width_sv.set('0')
@@ -124,7 +129,7 @@ def add_to_basket():
     tag_added = 'no'
     tag_text = ''
 
-    selected = selection.get()
+    selected = selection.get()  # get selection from selection dropdown
     if selected == CONTAINERS[0]:  # cube
         wrapper_size = (height * 4 + 6) * (height * 3 + 6)
     elif selected == CONTAINERS[1]:  # cuboid
@@ -133,20 +138,20 @@ def add_to_basket():
         circumference = pi * diameter
         wrapper_size = (circumference + 6) * (height + (diameter*2) + 6)
 
-    pt = paper_type.get()
+    pt = paper_type.get()  # get paper type from paper type dropdown
     if pt == 'Cheap':
         price = wrapper_size * CHEAP
     elif pt == 'Expensive':
         price = wrapper_size * EXPENSIVE
 
-    price = price / 100
+    price = price / 100  # convert to pounds
 
-    if bow.get():
+    if bow.get():  # if bow checkbox selected
         price += BOW
         bow_added = 'yes'
         bow.set(0)
 
-    if gift_tag.get():
+    if gift_tag.get():  # if gift tag checkbox selected
         tag_text = gift_tag_text.get()
         price += CARD
         price += len(tag_text) * CARD_LETTER
@@ -315,6 +320,9 @@ def draw_triangles():
 
 
 def print_quote():
+    '''creates or overwrites quote file with new information
+    by iterating through basket dictionary'''
+
     with open("quote.txt", "w+") as f:
         f.write('Quote: \n \n')
         for k, v in basket.items():
@@ -323,13 +331,16 @@ def print_quote():
                 f.write(value + '\n')
         f.write(f'Total cost: £ {total_cost:.2f} pounds.' + '\n')
         vat = total_cost * 0.2
-        f.write(f'VAT: {vat}' + '\n')
+        f.write(f'VAT: {vat:.2f}' + '\n')
         cost_w_vat = total_cost + vat
-        f.write(f'Total cost (with VAT): {cost_w_vat}')
+        f.write(f'Total cost (with VAT): {cost_w_vat:.2f}')
         messagebox.showinfo('Saved to file', 'Quote was saved to file "quote.txt" in main directory.')
 
 
 def view_basket():
+    '''creates new window with title and blank label,
+    fills in contents of label by iterating basket dict'''
+
     basket_contents = tk.StringVar()
     add_window = tk.Toplevel(main_window)
     add_window.title("Basket")
