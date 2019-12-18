@@ -322,19 +322,22 @@ def draw_triangles():
 def print_quote():
     '''creates or overwrites quote file with new information
     by iterating through basket dictionary'''
-
-    with open("quote.txt", "w+") as f:
-        f.write('Quote: \n \n')
-        for k, v in basket.items():
-            f.write(k + '\n')
-            for value in v:
-                f.write(value + '\n')
-        f.write(f'Total cost: £ {total_cost:.2f} pounds.' + '\n')
-        vat = total_cost * 0.2
-        f.write(f'VAT: {vat:.2f}' + '\n')
-        cost_w_vat = total_cost + vat
-        f.write(f'Total cost (with VAT): {cost_w_vat:.2f}')
-        messagebox.showinfo('Saved to file', 'Quote was saved to file "quote.txt" in main directory.')
+    if basket:  # if basket has contents
+        with open("quote.txt", "w+") as f:
+            f.write('Quote: \n \n')
+            for k, v in basket.items():
+                f.write(k + '\n \n')
+                for value in v:
+                    f.write(value + '\n')
+                f.write('\n')
+            f.write(f'Total cost: £ {total_cost:.2f} pounds.' + '\n')
+            vat = total_cost * 0.2
+            f.write(f'VAT: {vat:.2f}' + '\n')
+            cost_w_vat = total_cost + vat
+            f.write(f'Total cost (with VAT): {cost_w_vat:.2f}')
+            messagebox.showinfo('Saved to file', 'Quote was saved to file "quote.txt" in main directory.')
+    else:  # basket must be empty, no point writing to file
+        messagebox.showerror("Error", "There is nothing in the basket.")
 
 
 def view_basket():
@@ -357,6 +360,7 @@ def view_basket():
         for value in v:
             contents = contents + '\n'
             contents = contents + value
+        contents += '\n---'
         basket_contents.set(contents)
 
 
