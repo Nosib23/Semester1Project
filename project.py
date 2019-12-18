@@ -20,15 +20,15 @@ BOW = 1.5
 CARD = 0.5
 CARD_LETTER = 0.02
 
-button_font = "default 12"
-selection = tk.StringVar()
-selected_color = tk.StringVar()
-paper_type = tk.StringVar()
+basket = {}
 bow = tk.IntVar()
+button_font = "default 12"
 gift_tag = tk.IntVar()
 gift_tag_text = tk.StringVar()
-basket = {}
 no_of_items = tk.StringVar()
+paper_type = tk.StringVar()
+selection = tk.StringVar()
+selected_color = tk.StringVar()
 total_cost_str = tk.StringVar()
 total_cost = 0.0
 
