@@ -120,6 +120,10 @@ def add_to_basket():
     except ValueError:  # if value other than number input
         messagebox.showerror('Error', 'Inputs must be numbers')  # show user error box
         return  # and return to prevent further running
+    tag_text = gift_tag_text.get()
+    if not tag_text:
+        messagebox.showinfo('No gift tag text set', 'You have selected a gift tag but given no text. Please input text for your gift tag.')
+        return  # prevent further running of function
     colour = selected_color.get()
     height_sv.set('0')  # reset variables
     width_sv.set('0')
@@ -152,7 +156,6 @@ def add_to_basket():
         bow.set(0)
 
     if gift_tag.get():  # if gift tag checkbox selected
-        tag_text = gift_tag_text.get()
         price += CARD
         price += len(tag_text) * CARD_LETTER
         tag_added = 'yes'
@@ -343,6 +346,10 @@ def print_quote():
 def view_basket():
     '''creates new window with title and blank label,
     fills in contents of label by iterating basket dict'''
+
+    if not basket:
+        messagebox.showerror('Error', 'Basket currently empty.')
+        return
 
     basket_contents = tk.StringVar()
     add_window = tk.Toplevel(main_window)
