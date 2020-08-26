@@ -29,6 +29,7 @@ no_of_items = tk.StringVar()
 paper_type = tk.StringVar()
 selection = tk.StringVar()
 selected_color = tk.StringVar()
+tag_text = ''
 total_cost_str = tk.StringVar()
 total_cost = 0.0
 
@@ -120,10 +121,13 @@ def add_to_basket():
     except ValueError:  # if value other than number input
         messagebox.showerror('Error', 'Inputs must be numbers')  # show user error box
         return  # and return to prevent further running
-    tag_text = gift_tag_text.get()
-    if not tag_text:
-        messagebox.showinfo('No gift tag text set', 'You have selected a gift tag but given no text. Please input text for your gift tag.')
-        return  # prevent further running of function
+    
+    if gift_tag.get():
+        tag_text = gift_tag_text.get()
+        if not tag_text:
+            messagebox.showerror('Gift tag text not set', 'You have selected a gift tag but given no text to put onto it. Please provide a message.')
+            return # to prevent further running
+
     colour = selected_color.get()
     height_sv.set('0')  # reset variables
     width_sv.set('0')
